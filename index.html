@@ -130,83 +130,302 @@ nav{position:static;padding:20px 24px;display:flex;align-items:center;justify-co
 
 
 /* ==============================
-   RESULTADOS — CIRCULAR GALLERY
+   RESULTADOS — CARD FAN CAROUSEL
    ============================== */
-#resultados{background:var(--black);padding:0;}
-.circular-gallery-wrapper{width:100%;background:var(--black);}
-.circular-gallery-sticky{
-  position:sticky;
-  top:0;
-  width:100%;
-  height:100vh;
+#resultados{
+  position:relative;
+  padding:120px 24px 140px;
+  overflow:hidden;
+  background:var(--black);
+}
+/* Gradiente 21st.dev background-radial adaptado: preto → âmbar-ouro */
+.fan-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:radial-gradient(125% 125% at 50% 10%, #000000 40%, #1a0d00 68%, #4a2d00 85%, rgba(212,175,55,0.18) 100%);
+  pointer-events:none;
+}
+.fan-inner{
+  position:relative;
+  z-index:1;
+  max-width:var(--max);
+  margin:0 auto;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+}
+.fan-header{
+  text-align:center;
+  margin-bottom:72px;
+  max-width:640px;
+}
+.fan-deck-wrap{
+  position:relative;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+/* deck */
+.fan-deck{
+  position:relative;
+  width:280px;
+  height:420px;
+  cursor:grab;
+  touch-action:pan-y;
+  user-select:none;
+}
+.fan-deck:active{cursor:grabbing;}
+/* cada card 9:16 */
+.rcard{
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(212,175,55,0.25);
+  box-shadow:0 24px 60px rgba(0,0,0,0.7);
+  transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+  will-change:transform;
+  background:var(--card);
+}
+.rcard img{
+  width:100%;
+  height:65%;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
+  pointer-events:none;
+}
+.rcard-body{
+  height:35%;
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background:var(--card);
+}
+.rcard-name{
+  font-size:13px;
+  font-weight:600;
+  color:var(--gray-light);
+  letter-spacing:0.03em;
+}
+.rcard-result{
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  font-weight:700;
+  color:var(--gold);
+  line-height:1;
+}
+.rcard-period{
+  font-size:11px;
+  color:var(--gray);
+  margin-top:4px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.fan-hint{
+  margin-top:32px;
+  font-size:12px;
+  color:var(--gray);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  #resultados{padding:80px 20px 100px;}
+  .fan-header{margin-bottom:48px;}
+  .fan-deck{width:240px;height:360px;}
+  .rcard-result{font-size:22px;}
+}
+@media(max-width:480px){
+  .fan-deck{width:200px;height:300px;}
+  .rcard-result{font-size:18px;}
+  .rcard-body{padding:12px 14px;}
+}
+
+/* ==============================
+   DEPOIMENTOS — CARD FAN CAROUSEL
+   ============================== */
+#depoimentos{
+  position:relative;
+  padding:120px 24px;
   overflow:hidden;
   background:var(--black);
-  z-index:10;
-  padding-top:80px;
 }
-.resultados-header{
+/* Gradiente radial dark-gold — 21st.dev style */
+.dep-bg-gradient{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(212,175,55,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(212,175,55,0.05) 0%, transparent 60%);
+  pointer-events:none;
+}
+.dep-inner{
   position:relative;
-  text-align:center;
-  z-index:20;
+  z-index:1;
   max-width:var(--max);
-  margin:0 auto 60px;
-  padding:0 24px;
-  width:100%;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
-.circular-gallery-container{
+.dep-header{
+  text-align:center;
+  margin-bottom:72px;
+  max-width:640px;
+}
+
+/* FAN STACK */
+.fan-scene{
   width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:40px;
+}
+.fan-stack{
+  position:relative;
+  width:380px;
+  height:480px;
+}
+
+/* Cada fan-card de depoimento — posicionado em camadas */
+.fan-card{
+  position:absolute;
+  inset:0;
+  background:var(--card);
+  border-radius:16px;
+  border:0.5px solid rgba(212,175,55,0.2);
+  padding:36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  cursor:pointer;
+  will-change:transform,opacity;
+  /* Transição suave */
+  transition:transform 0.5s cubic-bezier(.23,1,.32,1),
+             opacity 0.5s ease,
+             box-shadow 0.5s ease;
+  backface-visibility:hidden;
+}
+/* Posições relativas: ativo, esquerda, direita, oculto */
+.fan-card[data-pos="active"]{
+  transform:translateX(0) rotate(0deg) scale(1);
+  opacity:1;
+  z-index:10;
+  box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(212,175,55,0.3);
+  border-color:rgba(212,175,55,0.4);
+}
+.fan-card[data-pos="left"]{
+  transform:translateX(-60%) rotate(-12deg) scale(0.88);
+  opacity:0.55;
+  z-index:5;
+}
+.fan-card[data-pos="right"]{
+  transform:translateX(60%) rotate(12deg) scale(0.88);
+  opacity:0.55;
+  z-index:5;
+}
+.fan-card[data-pos="far-left"]{
+  transform:translateX(-90%) rotate(-20deg) scale(0.75);
+  opacity:0.25;
+  z-index:1;
+}
+.fan-card[data-pos="far-right"]{
+  transform:translateX(90%) rotate(20deg) scale(0.75);
+  opacity:0.25;
+  z-index:1;
+}
+.fan-card[data-pos="hidden"]{
+  transform:translateX(0) scale(0.6);
+  opacity:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* Conteúdo do card */
+.fan-stars{color:var(--gold);font-size:16px;letter-spacing:3px;margin-bottom:20px;}
+.fan-quote{
+  font-size:16px;
+  color:var(--gray-light);
+  line-height:1.75;
+  font-style:italic;
   flex:1;
   display:flex;
   align-items:center;
-  justify-content:center;
-  perspective:1200px;
-  padding-bottom:80px;
 }
-.circular-gallery{
-  width:600px;
-  height:600px;
-  position:relative;
-  transform-style:preserve-3d;
+.fan-author{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding-top:20px;
+  border-top:0.5px solid var(--border);
 }
-.gallery-item{
-  position:absolute;
-  width:280px;
-  height:420px;
-  left:50%;
-  top:50%;
-  transform:translateX(-50%) translateY(-50%) rotateY(0deg) translateZ(300px);
-  opacity:0;
-  transition:all 0.6s ease-in-out;
-  border-radius:12px;
-  overflow:hidden;
-  border:1px solid rgba(212,175,55,0.2);
+.fan-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:var(--gold);flex-shrink:0;
 }
-.gallery-item.active{opacity:1;z-index:100;}
-.gallery-item.prev{transform:translateX(-50%) translateY(-50%) rotateY(-45deg) translateZ(300px);opacity:0.4;}
-.gallery-item.next{transform:translateX(-50%) translateY(-50%) rotateY(45deg) translateZ(300px);opacity:0.4;}
-.gallery-item img{width:100%;height:60%;object-fit:cover;display:block;}
-.gallery-item-content{height:40%;background:var(--card);padding:16px;display:flex;flex-direction:column;justify-content:space-between;}
-.gallery-item-name{font-size:14px;font-weight:600;color:var(--white);}
-.gallery-item-result{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);font-weight:700;}
-.gallery-item-period{font-size:11px;color:var(--gray);margin-top:2px;}
+.fan-name{font-size:14px;font-weight:600;color:var(--white);}
+.fan-role{font-size:12px;color:var(--gray);}
 
-/* DEPOIMENTOS */
-#depoimentos{padding:120px 24px;background:var(--surface);border-top:0.5px solid var(--border);}
-.dep-header{max-width:var(--max);margin:0 auto 64px;}
-.dep-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;row-gap:32px;align-items:start;}
-.dep-card{background:var(--card);padding:36px;border-radius:var(--radius);border:0.5px solid rgba(255,255,255,0.06);transition:border-color 0.2s;display:flex;flex-direction:column;min-height:360px;}
-.dep-card:hover{border-color:var(--border);}
-.dep-card.featured{background:var(--card2);border-color:var(--gold);}
-.dep-stars{color:var(--gold);font-size:14px;letter-spacing:3px;margin-bottom:20px;}
-.dep-quote{font-size:15px;color:var(--gray-light);line-height:1.7;margin-bottom:24px;font-style:italic;flex:1;}
-.dep-author{display:flex;align-items:center;gap:12px;margin-top:auto;}
-.dep-avatar{width:40px;height:40px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--gold);flex-shrink:0;}
-.dep-name{font-size:14px;font-weight:600;color:var(--white);}
-.dep-role{font-size:12px;color:var(--gray);}
+/* Controles */
+.fan-controls{
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+.fan-btn{
+  width:44px;height:44px;
+  border-radius:50%;
+  border:0.5px solid var(--border);
+  background:var(--card);
+  color:var(--white);
+  font-size:18px;
+  cursor:pointer;
+  transition:background 0.2s,border-color 0.2s,transform 0.15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.fan-btn:hover{background:var(--gold-dim);border-color:var(--gold);transform:scale(1.08);}
+.fan-dots{display:flex;gap:8px;align-items:center;}
+.fan-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--border);
+  transition:background 0.3s,transform 0.3s;
+  cursor:pointer;
+}
+.fan-dot.active{background:var(--gold);transform:scale(1.4);}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+  #depoimentos{padding:80px 20px;}
+  .dep-header{margin-bottom:48px;}
+  .fan-stack{width:300px;height:420px;}
+  .fan-card{padding:28px;}
+  .fan-quote{font-size:15px;}
+  .fan-card[data-pos="left"]{transform:translateX(-52%) rotate(-10deg) scale(0.86);}
+  .fan-card[data-pos="right"]{transform:translateX(52%) rotate(10deg) scale(0.86);}
+  .fan-card[data-pos="far-left"]{transform:translateX(-80%) rotate(-18deg) scale(0.72);opacity:0.2;}
+  .fan-card[data-pos="far-right"]{transform:translateX(80%) rotate(18deg) scale(0.72);opacity:0.2;}
+}
+@media (max-width:480px){
+  .fan-stack{width:260px;height:400px;}
+  .fan-card{padding:24px;}
+  .fan-quote{font-size:14px;}
+  .fan-card[data-pos="left"]{transform:translateX(-45%) rotate(-8deg) scale(0.84);}
+  .fan-card[data-pos="right"]{transform:translateX(45%) rotate(8deg) scale(0.84);}
+  .fan-card[data-pos="far-left"]{transform:translateX(-70%) rotate(-15deg) scale(0.68);opacity:0.15;}
+  .fan-card[data-pos="far-right"]{transform:translateX(70%) rotate(15deg) scale(0.68);opacity:0.15;}
+}
+
+
 
 /* FAQ */
 #faq{padding:120px 24px;background:var(--black);}
@@ -281,10 +500,6 @@ footer{padding:40px 24px;background:var(--surface);border-top:0.5px solid var(--
   .step-card:not(:last-child)::after{display:none;}
   .dep-grid{grid-template-columns:1fr;gap:32px;}
   .lucas-stats{grid-template-columns:1fr 1fr;}
-  .circular-gallery-sticky{padding-top:60px;}
-  .circular-gallery{width:500px;height:500px;}
-  .gallery-item{width:240px;height:360px;}
-  .resultados-header{margin-bottom:40px;}
 }
 @media (max-width:768px){
   .nav-logo{font-size:16px;}
@@ -296,12 +511,7 @@ footer{padding:40px 24px;background:var(--surface);border-top:0.5px solid var(--
   .trust-inner{gap:20px;}
   .trust-divider{display:none;}
   .trust-num{font-size:22px;}
-  #lucas,#problema,#processo,#resultados,#depoimentos,#faq,#localizacao,#cta-final{padding:80px 20px;}
-  .resultados-header{top:40px;margin-bottom:30px;}
-  .circular-gallery-sticky{padding-top:50px;}
-  .circular-gallery{width:400px;height:400px;}
-  .gallery-item{width:200px;height:300px;}
-  .gallery-item-result{font-size:16px;}
+  #lucas,#problema,#processo,#depoimentos,#faq,#localizacao,#cta-final{padding:80px 20px;}
   .section-title{font-size:clamp(28px,6vw,48px);}
   .section-sub{font-size:15px;}
   .quote-block{font-size:18px;padding:24px;}
@@ -326,13 +536,6 @@ footer{padding:40px 24px;background:var(--surface);border-top:0.5px solid var(--
   .lucas-stats{grid-template-columns:1fr;}
   .step-card{padding:32px 24px;}
   .step-num{font-size:56px;}
-  .circular-gallery-sticky{padding-top:40px;height:auto;min-height:100vh;}
-  .circular-gallery{width:320px;height:320px;}
-  .gallery-item{width:160px;height:240px;}
-  .gallery-item-result{font-size:14px;}
-  .gallery-item-name{font-size:11px;}
-  .resultados-header{margin-bottom:20px;padding:0 16px;}
-  .circular-gallery-container{padding-bottom:40px;}
   .faq-question{font-size:15px;}
 }
 </style>
@@ -495,62 +698,51 @@ footer{padding:40px 24px;background:var(--surface);border-top:0.5px solid var(--
   </div>
 </section>
 
-<!-- RESULTADOS — CIRCULAR GALLERY SCROLL-DRIVEN -->
+<!-- RESULTADOS — CARD FAN CAROUSEL -->
 <section id="resultados">
-  <!-- Outer scroll trigger container -->
-  <div class="circular-gallery-wrapper" style="height: 500vh;">
-    <!-- Inner sticky container -->
-    <div class="circular-gallery-sticky">
-      <div class="resultados-header fade-up">
-        <div class="section-label">Resultados reais</div>
-        <h2 class="section-title display">
-          Transformações documentadas,<br>
-          <em class="gold">não promessas vazias</em>
-        </h2>
-        <p class="section-sub">Casos reais de clientes que seguiram o processo. Role para girar a galeria.</p>
+  <!-- Gradiente radial preto → âmbar/ouro, inspirado no 21st.dev background-radial-black-violet adaptado -->
+  <div class="fan-bg"></div>
+  <div class="fan-inner">
+    <div class="fan-header fade-up">
+      <div class="section-label">Resultados reais</div>
+      <h2 class="section-title display">
+        Transformações documentadas,<br>
+        <em class="gold">não promessas vazias</em>
+      </h2>
+      <p class="section-sub">Arraste os cards para ver cada transformação.</p>
+    </div>
+    <!-- Card fan deck -->
+    <div class="fan-deck-wrap">
+      <div class="fan-deck" id="fanDeck">
+        <!-- Cards injetados por JS -->
       </div>
-      
-      <!-- Circular Gallery Container -->
-      <div class="circular-gallery-container">
-        <div class="circular-gallery" id="circularGallery">
-          <!-- Items renderizados por JS -->
-        </div>
-      </div>
+      <p class="fan-hint">← Arraste →</p>
     </div>
   </div>
 </section>
 
-<!-- DEPOIMENTOS -->
+<!-- DEPOIMENTOS — CARD FAN CAROUSEL -->
 <section id="depoimentos">
-  <div class="dep-header">
-    <div class="section-label">O que dizem os pacientes</div>
-    <h2 class="section-title display">
-      Avaliações <em class="gold">5 estrelas</em><br>no Google
-    </h2>
-  </div>
-  <div class="dep-grid">
-    <div class="dep-card featured fade-up">
-      <div class="dep-stars">★★★★★</div>
-      <div class="dep-quote">"Super recomendo. Excelente profissional, atencioso, consegue deixar o processo de emagrecimento mais fácil e natural. O plano é personalizado de verdade — ele entende sua rotina antes de prescrever qualquer coisa."</div>
-      <div class="dep-author">
-        <div class="dep-avatar">MP</div>
-        <div><div class="dep-name">Marina Paiva</div><div class="dep-role">Google — 5 estrelas</div></div>
-      </div>
+  <!-- Gradiente radial dark-gold inspirado no 21st.dev background snippets -->
+  <div class="dep-bg-gradient"></div>
+  <div class="dep-inner">
+    <div class="dep-header fade-up">
+      <div class="section-label">O que dizem os pacientes</div>
+      <h2 class="section-title display">
+        Avaliações <em class="gold">5 estrelas</em><br>no Google
+      </h2>
+      <p class="section-sub">Depoimentos reais de quem viveu a transformação.</p>
     </div>
-    <div class="dep-card fade-up">
-      <div class="dep-stars">★★★★★</div>
-      <div class="dep-quote">"Muito atencioso, excelente profissional. Fui com baixa expectativa e fui surpreendida com a atenção e o cuidado na consulta."</div>
-      <div class="dep-author">
-        <div class="dep-avatar">AC</div>
-        <div><div class="dep-name">Aglae Couto</div><div class="dep-role">Google — 5 estrelas</div></div>
+
+    <!-- Card Fan Carousel -->
+    <div class="fan-scene" id="fanScene">
+      <div class="fan-stack" id="fanStack">
+        <!-- Cards gerados por JS -->
       </div>
-    </div>
-    <div class="dep-card fade-up">
-      <div class="dep-stars">★★★★★</div>
-      <div class="dep-quote">"O Lucas é muito atencioso e me ajudou a entender que emagrecer não precisa ser sinônimo de sofrimento. Recomendo muito."</div>
-      <div class="dep-author">
-        <div class="dep-avatar">EO</div>
-        <div><div class="dep-name">Eduarda Oliveira</div><div class="dep-role">Google — 5 estrelas</div></div>
+      <div class="fan-controls">
+        <button class="fan-btn fan-prev" id="fanPrev" aria-label="Anterior">←</button>
+        <div class="fan-dots" id="fanDots"></div>
+        <button class="fan-btn fan-next" id="fanNext" aria-label="Próximo">→</button>
       </div>
     </div>
   </div>
@@ -783,72 +975,223 @@ document.querySelectorAll('.faq-question').forEach(q => {
 
 
 
-/* CIRCULAR GALLERY — SCROLL-DRIVEN ROTATION */
-const initCircularGallery = () => {
-  const galleryData = [
-    { name: 'Marina', result: '−2,3 kg', period: '30 dias', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80' },
-    { name: 'Lucas B.', result: '−4,2%', period: 'Gordura', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
-    { name: 'Carlos', result: '−3,7 kg', period: '45 dias', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80' },
-    { name: 'Ana', result: '−5,2 kg', period: '60 dias', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80' },
-    { name: 'Eduarda', result: '−6,0 kg', period: '90 dias', img: 'https://images.unsplash.com/photo-1517849845537-1d51a20414de?w=400&q=80' },
-    { name: 'Beatriz', result: '−4,5 kg', period: '60 dias', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80' },
-    { name: 'Rafael', result: '−3,2 kg', period: '40 dias', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80' },
-    { name: 'Sophia', result: '+2,8 kg', period: 'Massa', img: 'https://images.unsplash.com/photo-1516321318423-f06f70e504cb?w=400&q=80' },
-    { name: 'Marcus', result: '−5,8 kg', period: '75 dias', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80' },
-    { name: 'Julia', result: '−2,9 kg', period: '35 dias', img: 'https://images.unsplash.com/photo-1534528741775-53994a69f538?w=400&q=80' }
+/* RESULTADOS — CARD FAN CAROUSEL */
+(function() {
+  const CARDS = [
+    { name: 'Marina P.', result: '−2,3 kg', period: '30 dias', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=700&fit=crop' },
+    { name: 'Carlos M.', result: '−3,7 kg', period: '45 dias', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=700&fit=crop' },
+    { name: 'Ana L.', result: '−5,2 kg', period: '60 dias', img: 'https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=400&h=700&fit=crop' },
+    { name: 'Eduarda R.', result: '−6,0 kg', period: '90 dias', img: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=700&fit=crop' },
+    { name: 'Beatriz S.', result: '−4,5 kg', period: '60 dias', img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=700&fit=crop' },
+    { name: 'Rafael T.', result: '−3,2 kg', period: '40 dias', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=700&fit=crop' },
+    { name: 'Sophia V.', result: '+2,8 kg', period: 'Massa magra', img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=700&fit=crop' },
+    { name: 'Marcus O.', result: '−5,8 kg', period: '75 dias', img: 'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?w=400&h=700&fit=crop' },
+    { name: 'Julia F.', result: '−2,9 kg', period: '35 dias', img: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&h=700&fit=crop' },
+    { name: 'Lucas B.', result: '−4,2%', period: 'Gordura corporal', img: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&h=700&fit=crop' }
   ];
 
-  const gallery = document.getElementById('circularGallery');
-  const wrapper = document.querySelector('.circular-gallery-wrapper');
-  
-  if (!gallery || !wrapper) return;
+  const init = () => {
+    const deck = document.getElementById('fanDeck');
+    if (!deck) return;
 
-  // Renderizar items
-  galleryData.forEach((item, idx) => {
+    let current = 0;
+    const total = CARDS.length;
+
+    // Renderizar todos os cards
+    CARDS.forEach((c) => {
+      const el = document.createElement('div');
+      el.className = 'rcard';
+      el.innerHTML = `
+        <img src="${c.img}" alt="${c.name}" loading="lazy">
+        <div class="rcard-body">
+          <div class="rcard-name">${c.name}</div>
+          <div>
+            <div class="rcard-result">${c.result}</div>
+            <div class="rcard-period">${c.period}</div>
+          </div>
+        </div>`;
+      deck.appendChild(el);
+    });
+
+    const cards = deck.querySelectorAll('.rcard');
+
+    const layout = () => {
+      cards.forEach((card, i) => {
+        const offset = (i - current + total) % total;
+        if (offset === 0) {
+          card.style.cssText = `transform:translateX(0) rotate(0deg);opacity:1;z-index:${total};pointer-events:auto;`;
+        } else if (offset <= 4) {
+          const side = offset % 2 === 0 ? 1 : -1;
+          const angle = side * offset * 6;
+          const tx = side * offset * 14;
+          const ty = offset * 7;
+          card.style.cssText = `transform:translateX(${tx}px) translateY(${ty}px) rotate(${angle}deg);opacity:${1 - offset * 0.18};z-index:${total - offset};pointer-events:none;`;
+        } else {
+          card.style.cssText = `transform:translateY(30px) scale(0.94);opacity:0;z-index:0;pointer-events:none;`;
+        }
+      });
+    };
+
+    layout();
+
+    // Interação: drag horizontal ou click avança
+    let startX = 0, startY = 0, dragging = false;
+
+    deck.addEventListener('mousedown', e => { startX = e.clientX; startY = e.clientY; dragging = true; });
+    window.addEventListener('mouseup', e => {
+      if (!dragging) return;
+      dragging = false;
+      if (Math.abs(e.clientX - startX) > Math.abs(e.clientY - startY) && Math.abs(e.clientX - startX) > 36) {
+        current = (current + 1) % total;
+        layout();
+      }
+    });
+    deck.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; dragging = true; }, { passive: true });
+    deck.addEventListener('touchend', e => {
+      if (!dragging) return;
+      dragging = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 36) {
+        current = (current + 1) % total;
+        layout();
+      }
+    }, { passive: true });
+    deck.addEventListener('click', () => { current = (current + 1) % total; layout(); });
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+/* CARD FAN CAROUSEL */
+const initFanCarousel = () => {
+  const stack = document.getElementById('fanStack');
+  const dotsEl = document.getElementById('fanDots');
+  const prevBtn = document.getElementById('fanPrev');
+  const nextBtn = document.getElementById('fanNext');
+  if (!stack) return;
+
+  const cards = [
+    {
+      quote: '"Super recomendo. Excelente profissional, atencioso — consegue deixar o processo de emagrecimento mais fácil e natural. O plano é personalizado de verdade."',
+      name: 'Marina Paiva', role: 'Google — 5 estrelas', initials: 'MP'
+    },
+    {
+      quote: '"Muito atencioso, excelente profissional. Fui com baixa expectativa e fui surpreendida com a atenção e o cuidado na consulta. Recomendo demais."',
+      name: 'Aglae Couto', role: 'Google — 5 estrelas', initials: 'AC'
+    },
+    {
+      quote: '"O Lucas me ajudou a entender que emagrecer não precisa ser sinônimo de sofrimento. O processo é leve, humano e com resultado real."',
+      name: 'Eduarda Oliveira', role: 'Google — 5 estrelas', initials: 'EO'
+    },
+    {
+      quote: '"Resultado além do que eu esperava. Em 45 dias, perdi 3,7 kg e 4 cm de cintura sem passar fome. Nunca imaginei que seria tão tranquilo."',
+      name: 'Carlos S.', role: 'Paciente — Consulta online', initials: 'CS'
+    },
+    {
+      quote: '"Minha performance no treino melhorou muito depois que comecei o acompanhamento. O Lucas entende de nutrição esportiva de verdade."',
+      name: 'Rafael M.', role: 'Paciente — Atleta amador', initials: 'RM'
+    },
+  ];
+
+  let current = 0;
+  const total = cards.length;
+
+  // Renderizar cards
+  cards.forEach((card, idx) => {
     const div = document.createElement('div');
-    div.className = `gallery-item ${idx === 0 ? 'active' : ''}`;
+    div.className = 'fan-card';
+    div.dataset.idx = idx;
     div.innerHTML = `
-      <img src="${item.img}" alt="${item.name}">
-      <div class="gallery-item-content">
-        <div class="gallery-item-name">${item.name}</div>
+      <div>
+        <div class="fan-stars">★★★★★</div>
+        <div class="fan-quote">${card.quote}</div>
+      </div>
+      <div class="fan-author">
+        <div class="fan-avatar">${card.initials}</div>
         <div>
-          <div class="gallery-item-result">${item.result}</div>
-          <div class="gallery-item-period">${item.period}</div>
+          <div class="fan-name">${card.name}</div>
+          <div class="fan-role">${card.role}</div>
         </div>
       </div>
     `;
-    gallery.appendChild(div);
+    // Click em card lateral avança para ele
+    div.addEventListener('click', () => {
+      const pos = div.dataset.pos;
+      if (pos === 'right' || pos === 'far-right') advance(1);
+      if (pos === 'left' || pos === 'far-left') advance(-1);
+    });
+    stack.appendChild(div);
   });
 
-  let currentIndex = 0;
-  const items = gallery.querySelectorAll('.gallery-item');
-  const totalItems = items.length;
+  // Renderizar dots
+  cards.forEach((_, idx) => {
+    const dot = document.createElement('div');
+    dot.className = `fan-dot${idx === 0 ? ' active' : ''}`;
+    dot.addEventListener('click', () => goTo(idx));
+    dotsEl.appendChild(dot);
+  });
 
-  const updateGallery = (scrollPercent) => {
-    const index = Math.floor((scrollPercent / 100) * totalItems) % totalItems;
-    if (index !== currentIndex) {
-      items.forEach((item, idx) => {
-        item.classList.remove('active', 'prev', 'next');
-        if (idx === index) item.classList.add('active');
-        else if (idx === (index - 1 + totalItems) % totalItems) item.classList.add('prev');
-        else if (idx === (index + 1) % totalItems) item.classList.add('next');
-      });
-      currentIndex = index;
-    }
+  const positions = ['far-left', 'left', 'active', 'right', 'far-right'];
+
+  const updatePositions = () => {
+    const cardEls = stack.querySelectorAll('.fan-card');
+    cardEls.forEach((card, idx) => {
+      const offset = (idx - current + total) % total;
+      // Mapear offset para posição visual
+      let pos;
+      if (offset === 0) pos = 'active';
+      else if (offset === 1) pos = 'right';
+      else if (offset === total - 1) pos = 'left';
+      else if (offset === 2) pos = 'far-right';
+      else if (offset === total - 2) pos = 'far-left';
+      else pos = 'hidden';
+      card.dataset.pos = pos;
+    });
+
+    // Atualizar dots
+    dotsEl.querySelectorAll('.fan-dot').forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === current);
+    });
   };
 
-  window.addEventListener('scroll', () => {
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const wrapperHeight = wrapper.offsetHeight;
-    const scrollPercent = Math.max(0, Math.min(100, (window.innerHeight - wrapperRect.top) / (window.innerHeight + wrapperHeight) * 100));
-    updateGallery(scrollPercent);
-  });
+  const advance = (dir) => {
+    current = (current + dir + total) % total;
+    updatePositions();
+  };
+
+  const goTo = (idx) => {
+    current = idx;
+    updatePositions();
+  };
+
+  prevBtn.addEventListener('click', () => advance(-1));
+  nextBtn.addEventListener('click', () => advance(1));
+
+  // Swipe touch
+  let touchStartX = 0;
+  stack.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  stack.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Auto-advance a cada 5s
+  let autoTimer = setInterval(() => advance(1), 5000);
+  stack.addEventListener('touchstart', () => clearInterval(autoTimer), { passive: true });
+  prevBtn.addEventListener('click', () => { clearInterval(autoTimer); });
+  nextBtn.addEventListener('click', () => { clearInterval(autoTimer); });
+
+  updatePositions();
 };
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCircularGallery);
+  document.addEventListener('DOMContentLoaded', () => {
+    initFanCarousel();
+  });
 } else {
-  initCircularGallery();
+  initFanCarousel();
 }
 </script>
 </body>
